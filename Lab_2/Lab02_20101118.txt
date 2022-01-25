@@ -1,0 +1,347 @@
+class Node:             #NODE CLASS
+    def __init__(self,value,next):
+        self.value = value
+        self.next = next
+
+class myList:                                       #My List Class
+    def __init__(self,a = None):                    # Constructor
+        if a is None:                               # Creates empty list
+            self.head = None
+        elif isinstance(a, list):                   # Creates list from Array
+            head = None
+            tail = None
+            for i in range(len(a)):        
+                newNode = Node(a[i],None)
+                if head is None:
+                    head = newNode
+                    tail = newNode
+                else:
+                    tail.next = newNode
+                    tail = tail.next
+            self.head = head
+
+        elif isinstance(a, myList):                 # Creates list from another List
+            head = None
+            tail = None
+            n = a.head
+            while n is not None:
+                newNode = Node(n.value,None)
+                if head is None:
+                    head = newNode
+                    tail = newNode
+                else:
+                    tail.next = newNode
+                    tail = tail.next
+                n = n.next
+            self.head = head
+
+    def showList(self):                             # Prints the entire list
+        if self.head == None:                       # Prints Empty List if the list has no nodes
+            print("Empty list")
+        else:
+            current = self.head
+            string = ''
+            while(current != None):
+                string += str(current.value) + " --> "
+                current = current.next
+            print(string)
+    
+    def isEmpty(self):                              # Returns True if List is empty
+        if self.head is None:
+            return True
+        return False
+
+    def length(self):                               # Returns the length of the List
+        count = 0
+        x = self.head
+        while x is not None:
+            count += 1
+            x = x.next
+        return count
+
+    def clear(self):                                # Clears an entire list
+        head = self.head
+        self.head = None
+        tail = head.next
+        while tail is not None:
+            head = None
+            head = tail
+            tail = tail.next
+
+    def insert(self,newElement,index = None):      # Inserts value in a list. if no index is given then it inserts at the end of a list
+        check = self.head
+        while check is not None:                   # If new element is already in list, then this does not let it insert the value in the list again. 
+            if check.value == newElement:
+                print("New element is already in list")
+                return
+            check = check.next
+        if index is None:                          # If no index is given then this inserts new element at the end of the list.
+            if self.head is None:
+                self.head = Node(newElement,None)
+                return
+            tail = self.head
+            while tail.next is not None:
+                tail = tail.next
+            tail.next = Node(newElement,None)
+
+        elif index < 0 or index >= self.length():  # If invalid index is given then it handles it.
+            print("INVALID INDEX")
+            return
+        else:
+            if index == 0:                         # Inserts value at first if given index is 0
+                newNode = Node(newElement,self.head)
+                self.head = newNode
+            else:                                  # Inserts value at given index
+                newNode = Node(newElement,None)
+                tail = self.head
+                c = 1
+                while c < index:
+                    tail = tail.next
+                    c += 1
+                x = tail.next
+                tail.next = newNode
+                newNode.next = x                
+                
+    
+    def remove (self,deleteKey):                  # removes the node that contain deleteKey
+        tail = self.head
+        beforeTail = self.head
+        first = True
+        while tail is not None:
+            if tail.value == deleteKey:
+                if first:                         # Handles the situation if given key is in first index
+                    self.head = tail.next
+                else:
+                    beforeTail.next = tail.next
+                    tail = None
+                return deleteKey
+            beforeTail = tail
+            tail = tail.next
+            first = False
+        return deleteKey
+    
+    def showEvenNumbers(self):                    # Returns new list containing integers
+        newList = myList()
+        tail = self.head
+        while tail is not None:
+            if tail.value % 2 == 0:
+                newList.insert(tail.value)
+            tail = tail.next
+        return newList
+    
+    def has(self,element):                        # Returns True if given element is in the list
+        tail = self.head
+        while tail is not None:
+            if tail.value == element:
+                return True
+            tail = tail.next
+        return False
+
+    def reverse(self):                            # Reverses the list :) 
+        if self.head == None:                     # Handles if given list is empty. I don't know why you would do that though...
+            return self.head
+        elif self.head.next == None:              # Handles if given list has only one node. Why I am even doing this I don't know...
+            return self.head
+        else:                                     # Reverses a list. I almost cried here...
+            newHead = None
+            current = self.head
+            while current is not None: 
+                tail = current.next
+                current.next = newHead
+                newHead = current
+                current = tail
+            self.head = newHead
+        
+    def swap(self,x):                             # Swaps value x to its next values. such as 0>1>2 to 0>2>1
+        prev = None
+        cur = self.head
+        if self.head.value == x:                  # Handles if x is First element
+            newHead = cur.next
+            cur.next = cur.next.next
+            newHead.next = cur
+            self.head = newHead
+            return
+        
+        while cur.next is not None:               # If x is not the first element. also handles if x is the last value and then it does not swap :)
+            if cur.value == x:
+                prev.next = cur.next
+                prev = prev.next
+                cur.next = cur.next.next
+                prev.next = cur
+                return
+            first = False
+            prev = cur
+            cur = cur.next
+        
+    def sort(self):                               # Sorts the list using bubble sort algorithm
+        current = self.head
+        swap = True
+        while swap:
+            swap = False
+            current =  self.head
+            while current.next is not None:
+                if current.value > current.next.value:
+                    swap = True
+                    self.swap(current.value)
+                else: 
+                    current = current.next
+                
+    def sum(self):                                # Returns sum of the values in a list.
+        tail = self.head
+        sum = 0
+        while tail is not None:
+            sum += tail.value
+            tail = tail.next
+        return sum
+
+    def rotate(self,side,k):                      # Rotates list on given side for given amount of numbers
+        if self.head is None:                     # Handles empty list
+            print("EmptyList")
+            return
+        elif self.head.next is None:              # Returns if list has only one node
+            return
+        elif side == 'left':                      # Does left rotate
+            while k != 0:
+                lastNode = self.head
+                newHead = self.head.next
+                self.head.next = None
+                cur = newHead
+                while cur.next is not None:
+                    cur = cur.next
+                cur.next = lastNode
+                self.head = newHead
+                k -= 1
+            return
+
+        elif side == 'right':                     # Does right rotate
+            while k != 0:
+                newTail = self.head
+                while newTail.next.next is not None:
+                    newTail = newTail.next
+                newHead = newTail.next
+                newTail.next = None
+                newHead.next = self.head
+                self.head = newHead
+                k -= 1
+            return
+        else:                                     # Handles useless input
+            print("Invalid syntax. write left or right")
+
+
+ # TEST STATEMENT 
+
+print("====================  Task 1  =====================")
+print("Node class created")
+print("myList class created")
+print("===================================================")
+print("====================  Task 2  =====================")
+print("\n1.a  Creating Empty linked list")
+list_1 = myList()
+print("Printing emptylist...")
+list_1.showList()
+print("\n1.b   Creating linked list from Array [2,4,8,9]")
+array = [2,4,8,9]
+list_2 = myList(array)
+print("Printing the created list from array...")
+list_2.showList()
+print("\n1.c Creating linked from another linked List")
+list_3 = myList(list_2)
+print("Printing the created list from another linked List...")
+list_3.showList()
+
+print("\n\n2. showList(self) ")
+print("Printing 3 list created before ")
+list_1.showList()
+list_2.showList()
+list_3.showList()
+
+print("\n\n3. isEmpty(self) ")
+print("list_1 is empty so,it returns",list_1.isEmpty())
+print("list_2 is not empty so,it returns",list_2.isEmpty())
+print("\n\n4. clear(self)")
+print("Before clearing")
+list_3.showList()
+list_3.clear()
+print("After clearing")
+list_3.showList()
+
+print("\n\n5.  insert(self, newElement)")
+print("Before inserting")
+list_2.showList()
+list_2.insert(10)
+print("After inserting 10")
+list_2.showList()
+
+print("\n\n6.  insert(self, newElement, index)")
+print("Before inserting")
+list_2.showList()
+list_2.insert(6,2)
+print("After inserting 6 at index 2")
+list_2.showList()
+
+print("\n\n7.  remove(self, deletekey)")
+print("Before removing")
+list_2.showList()
+list_2.remove(9)
+print("After removing 9")
+list_2.showList()
+
+print("\n\n===================================================")
+print("====================  Task 3  =====================")
+
+print("\n\n1.  showEvenNumbers(self)")
+print("From this list ")
+list_1 = myList([1,2,3,4,5,6,7,8])
+list_1.showList()
+list_3 = list_1.showEvenNumbers()
+print("creates another linked list with even numbers only")
+list_3.showList()
+
+print("\n\n2.  has(self)")
+print("Finds out if the element is in the list or not ")
+print("Finding 23 from following list ")
+list_1.showList()
+
+print("After calling the function we get",list_1.has(23))
+print("Because 23 is absent in following list")
+list_3.showList()
+print("but, calling the function for 6 we get",list_1.has(6))
+print("Because 6 is present in following list")
+list_3.showList()
+
+print("\n\n3.  reverse(self)")
+print("Before reversing")
+list_1.showList()
+list_1.reverse()
+print("After reversing")
+list_1.showList()
+
+print("\n\n4.  sort(self)")
+print("Before sorting")
+list_1 = myList([1,3,4,2,7,8,9,6,5])
+list_1.showList()
+list_1.sort()
+print("After sorting")
+list_1.showList()
+
+
+print("\n\n5.  sum(self)")
+print("returns the sum of following list")
+list_1.showList()
+print("sum =",list_1.sum())
+
+print("\n\n6.  rotate(self,side,k)")
+print("Given list")
+list_1.showList()
+print("If we want to rotate it right for 2 times, we will call .rotate(self,'right',2)")
+list_1.rotate('right',2)
+print("After rotating right for 2 times")
+list_1.showList()
+
+print("\nAgain, given list")
+list_1.showList()
+print("If we want to rotate it left for 3 times, we will call .rotate(self,'left',3)")
+list_1.rotate('left',3)
+print("After rotating left for 3 times")
+list_1.showList()
+

@@ -1,0 +1,164 @@
+1.
+
+def shiftLeft(source,k):
+    for i in range (0,len(source)-k):
+        source[i] = source[i+k]
+    while(k!=0):
+        source[len(source)-k] = 0
+        k -= 1
+    return source
+
+2.
+
+
+def rotateLeft(source,k):
+    i = 0
+    while i<k:
+        temp = source[0]
+        for j in range(len(source)-1):
+           source[j] = source[j+1]
+        source[len(source)-1] = temp
+        i += 1
+    return source
+
+
+3.
+
+
+def remove(source, validLength, index):
+    if index >= validLength-1: print("Invalid Index")
+    else:
+        for i in range(index,validLength):
+            source[i] = source[i+1]
+    return(source)
+
+
+4.
+
+def removeAll(source,size,element):
+    count = 0
+    for i in range(size):
+        if source[i] == element:
+            source[i] = 0
+            count += 1
+    if count == 0:
+        print('No value found')
+        return source
+    else: 
+        i = 0
+        j = 0
+        while i<len(source)-count:
+            if source[i] == 0:
+                j = i + 1
+                while  j < len(source)-1 and source[j] == 0:
+                    j += 1    
+                source[i] = source[j]
+                source[j] = 0
+            i += 1
+        return source
+                
+5.
+
+def checkBalance(source):
+    i = 0
+    while i < len(source)-1:
+        s1 = 0
+        s2 = 0
+        for left in range (i+1):
+            s1 += source[left]
+        for right in range(i+1,len(source)):
+            s2 += source[right]
+        if s1 == s2:
+            return True
+        i += 1
+    return False
+
+
+6.
+
+def arrayMaker(n):
+    ar = [0]*n*n
+    x = 0
+    seg = 1
+    for i in range(n*n):
+        if x >= n-seg: 
+            ar[i] = n - x
+        x += 1
+        if x == n:
+            x = 0
+            seg += 1
+        
+    return ar
+
+
+7.
+
+def maxBunchCount(source):
+    count = 1
+    res = 1
+    for i in range(1,len(source)):
+        if source[i] == source[i-1]:
+            count += 1
+        else:
+            count = 1
+        if res < count:
+            res = count
+    return res 
+
+
+8.
+
+
+def valueAche(arr,start,end,val):
+    for i in range(start,end):
+        if arr[i] != 0 and arr[i] == val:
+            return True
+    return False
+
+def repetation(source):
+    count = [0]*len(source)
+    countIndex = 0
+    for i in range(len(source)-1):
+        if not valueAche(source,0,i,source[i]):
+            for j in range(i+1,len(source)):
+                if source[i] == source[j]:
+                    count[countIndex] += 1
+            countIndex += 1
+                
+    for i in range(len(count)):
+        if valueAche(count,i+1,len(count),count[i]):
+            return True
+    return False
+
+
+9.
+
+def Palindrome (cir,start,size):
+    sIndex = start
+    lIndex = (start+size-1)%len(cir)
+    for i in range(size//2):
+        if cir[sIndex] != cir[lIndex]:
+            return False
+    return True
+
+10.
+
+
+def Intersection (cir1,start_1,size_1,cir2,start_2,size_2):
+    index1 = start_1
+    index2 = start_2
+    if len(cir1)>len(cir2): tempArray = [0]*len(cir1)
+    else: tempArray = [0]*len(cir2)
+    tempIndex = 0
+    for i in range(size_1):
+        index2 = start_2
+        for j in range(size_2):
+            if cir1[index1] == cir2[index2] :
+                tempArray[tempIndex] = cir1[index1]
+                tempIndex += 1
+            index2 = (index2+1)%len(cir2)
+        index1 = (index1+1)%len(cir1)
+    linArray = [0]*tempIndex
+    for i in range(tempIndex):
+        linArray[i] = tempArray[i]
+    return linArray

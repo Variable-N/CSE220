@@ -1,0 +1,260 @@
+#1
+print("\n         Question 1           \n")
+def minIndexFinder(array,index,minIndex = None):
+    if minIndex is None: minIndex = index
+    if index == len(array): return minIndex
+    if array[index] < array[minIndex]: minIndex = index
+    return minIndexFinder(array, index+1, minIndex)
+
+def sort_Selection_Array (array,index=0):
+    if index == len(array) - 1:
+        return
+    minIndex = minIndexFinder(array,index)
+    array[index],array[minIndex] = array[minIndex],array[index]
+    return sort_Selection_Array(array,index+1)
+
+
+#TEST STATEMENT
+
+
+
+a = [5,3,1,2,4]
+print("Before sorting")
+print(a)
+sort_Selection_Array(a)
+print("After sorting")
+print(a)
+
+
+#2
+print("\n         Question 2           \n")
+
+def sort_insertionR(array,i=0):
+    if i == len(array)-1:
+        return
+    if array[i] > array[i+1]:
+            j = i+1
+            while j != 0 and array[j] < array[j-1]:
+                array[j],array[j-1] = array[j-1],array[j]
+                j -= 1
+    sort_insertionR(array,i+1)
+ 
+
+#TEST STATEMENT
+
+
+array = [7,4,2,5,3,1,6]
+print("Before sorting")   
+print(array)     
+sort_insertionR(array)
+print("After sorting")
+print(array)
+
+#3
+print("\n         Question 3           \n")
+
+class Node:             #NODE CLASS
+    def __init__(self,value,next):
+        self.value = value
+        self.next = next
+
+class singlyLinkedList:                                       # My List Class
+    def __init__(self,a = None):                    # Constructor
+        if a is None:                               # Creates empty list
+            self.head = None
+        elif isinstance(a, list):                   # Creates list from Array
+            head = None
+            tail = None
+            for i in range(len(a)):        
+                newNode = Node(a[i],None)
+                if head is None:
+                    head = newNode
+                    tail = newNode
+                else:
+                    tail.next = newNode
+                    tail = tail.next
+            self.head = head
+
+    def showList(self):                             # Prints the entire list
+        if self.head == None:                       # Prints Empty List if the list has no nodes
+            print("Empty list")
+        else:
+            current = self.head
+            string = ''
+            while(current != None):
+                string += str(current.value) + " --> "
+                current = current.next
+            print(string)
+
+    def swap(self,x):                             # Swaps value x to its next values. such as 0>1>2 to 0>2>1
+        prev = None
+        cur = self.head
+        if self.head.value == x:                  # Handles if x is First element
+            newHead = cur.next
+            cur.next = cur.next.next
+            newHead.next = cur
+            self.head = newHead
+            return
+        
+        while cur.next is not None:               # If x is not the first element. also handles if x is the last value and then it does not swap :)
+            if cur.value == x:
+                prev.next = cur.next
+                prev = prev.next
+                cur.next = cur.next.next
+                prev.next = cur
+                return
+            first = False
+            prev = cur
+            cur = cur.next    
+
+def sort_bubble(singlyLinkedList):                               # Sorts the list using bubble sort algorithm
+    current = singlyLinkedList.head
+    swap = True
+    while swap:
+        swap = False
+        current =  singlyLinkedList.head
+        while current.next is not None:
+            if current.value > current.next.value:
+                swap = True
+                singlyLinkedList.swap(current.value)
+            else: 
+                current = current.next
+
+
+#TEST STATEMENT
+
+
+a = singlyLinkedList([7, 4, 2, 5, 3, 1, 6])
+print("Before sorting")   
+a.showList()  
+sort_bubble(a)
+print("After sorting")
+a.showList()
+
+print("\n         Question 4           \n")
+
+#4
+
+def sort_selection(linkedList):
+    j = linkedList.head
+    while j is not None:
+        i = j
+        mini = i
+        while i is not None:
+            if i.value < mini.value:
+                mini = i
+            i = i.next
+        mini.value, j.value = j.value, mini.value
+        j = j.next
+
+
+#TEST STATEMENT
+
+
+a = singlyLinkedList([7, 4, 2, 5, 3, 1, 6])
+print("Before sorting")   
+a.showList()  
+sort_selection(a)
+print("After sorting")
+a.showList()
+
+#5
+
+print("\n         Question 5           \n")
+# !!!!!!   NODE CLASS ARE DIFFERENT HERE     !!!!!!   
+class Node:             #NODE CLASS
+    def __init__(self,value,next,prev):
+        self.value = value
+        self.next = next
+        self.prev = prev
+
+class DoublyList:
+    def __init__(self,a):
+        if len(a) == 0:
+            self.head = None
+        else:
+            self.head = Node(a[0],None,None)
+            prv = self.head
+            for i in range(1,len(a)):
+                newNode = Node(a[i],None,prv)
+                prv.next = newNode
+                prv = newNode
+                
+    def showList(self):
+        if self.head is None:
+            print("Empty List")
+            return
+        tail = self.head
+        string = ""
+        while tail is not None:
+            string += "-< "+ str(tail.value)+" >-"
+            tail = tail.next
+        print(string)
+
+
+def sort_insertionX(doublyList):
+    i = doublyList.head
+    while i.next is not None:
+        j = i.next
+        while j is not None and j.value < j.prev.value:
+            j.value, j.prev.value = j.prev.value, j.value
+            j = j.prev
+            if j.prev is None:
+                break
+        i = i.next
+
+
+#TEST STATEMENT
+
+
+a = DoublyList([5,4,2,1,6,7,3])
+print("Before Sorting")
+a.showList()
+sort_insertionX(a)
+print("After Sorting")
+a.showList()
+
+#6
+print("\n         Question 6           \n")
+def binarySearch(array,value,mini = 0, maxi = None):
+    if maxi is None:
+        maxi = len(array)
+    mid = (maxi+mini)//2
+    if array[mid] == value:
+        return mid
+    if array[mid] > value:
+        return binarySearch(array,value,mini,mid)
+    else:
+        return binarySearch(array,value,mid,maxi)
+    return -1
+
+
+#TEST STATEMENT
+
+
+array = [1,2,3,4,5]
+print("Searching 2 in this array")
+print(array)
+print("Value is in index",binarySearch(array,2))
+
+
+#7
+print("\n         Question 7           \n")
+def fibonacci (n,array = None):
+    if array is None:
+        array = [0]*(n+1)
+    if array[n] != 0:
+        return array[n]
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    array[n] = fibonacci(n-1,array) + fibonacci(n-2,array)
+    return array[n]
+
+
+#TEST STATEMENT
+
+
+print("The 9th Value of fibonacci number is: ", end = "")
+print(fibonacci(9))
